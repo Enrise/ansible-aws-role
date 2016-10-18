@@ -1,0 +1,10 @@
+---
+- name: Gather ec2 facts
+  action: ec2_facts
+
+- name: Install boto
+  pip: name=boto
+
+- include: tags.yml
+- include: snapshots.yml
+- include: alarms.yml

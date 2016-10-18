@@ -1,0 +1,12 @@
+---
+# Alarms
+aws_enable_statuscheck_alarm: false
+aws_alarms_actions: ["arn:aws:sns:eu-west-1:569126591137:EPIC-Notify"]
+
+# Tags
+aws_tags:
+  Name: "{{ ansible_fqdn|regex_replace('.projects.office.amazon.enrise.net', '')}}"
+
+# Snapshots
+aws_enable_snapshots: true
+aws_snapshots_nr_to_keep: 4

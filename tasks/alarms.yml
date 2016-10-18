@@ -1,0 +1,17 @@
+---
+- name: Status check failed alarm
+  ec2_metric_alarm:
+    state: present
+    region: "{{ ansible_ec2_placement_region }}"
+    name: "{{ short_hostname }}-Status-Check-Failed"
+    metric: "StatusCheckFailed"
+    namespace: "AWS/EC2"
+    statistic: Maximum
+    comparison: ">="
+    threshold: 1.0
+    period: 60
+    evaluation_periods: 2
+    description: "Instance status check failed"
+    dimensions: { 'InstanceId': "{{ ansible_ec2_instance_id }}" }
+    alarm_actions: "{{ aws_alarms_actions }}"
+  when: "{{ aws_enable_statuscheck_alarm }}"
