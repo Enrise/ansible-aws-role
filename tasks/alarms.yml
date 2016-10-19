@@ -3,7 +3,7 @@
   ec2_metric_alarm:
     state: present
     region: "{{ ansible_ec2_placement_region }}"
-    name: "{{ short_hostname }}-Status-Check-Failed"
+    name: "{{ aws_hostname }}-Status-Check-Failed"
     metric: "StatusCheckFailed"
     namespace: "AWS/EC2"
     statistic: Maximum
