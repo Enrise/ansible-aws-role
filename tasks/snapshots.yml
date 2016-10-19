@@ -1,0 +1,31 @@
+---
+- name: Install AWS CLI
+  pip:
+    name: awscli
+
+- name: Fetch volumes of instance
+  command: "aws ec2 describe-volumes --region {{ ansible_ec2_placement_region }} --filters Name=attachment.instance-id,Values={{ ansible_ec2_instance_id }} --query 'Volumes[*].{ID:VolumeId,Tag:Tags[?Key==`Customer`]}'"
+  register: ec2_volumes_output
+
+- name: Register ec2 volumes
+  set_fact:
+    ec2_volume_id: "{{ (ec2_volumes_output.stdout|from_json).0.ID }}"
+
+- name: Add the ec2-automate-backup script
+  template: src=ec2-automate-backup.j2.sh dest=/opt/ec2-automate-backup.sh mode=0555
+
+- name: Set the cron to execute the ec2 backups every night
+  cron:
+    job: >
+      PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+      /opt/ec2-automate-backup.sh
+      -r {{ ansible_ec2_placement_region }}
+      -k {{ aws_snapshots_nr_to_keep }}
+      -p
+      -v {{ ec2_volume_id }}
+      -u "{% for key, value in aws_tags.iteritems() %}Key={{ key }},Value={{ value }} {% endfor %}"
+    state: present
+    minute: 0
+    hour: 0
+    user: root
+    name: "ec2-automate-backup"
