@@ -69,7 +69,7 @@ create_EBS_Snapshot_Tags() {
   fi
   #if $user_tags is true, then append Volume=$ebs_selected and Created=$current_date to the variable $snapshot_tags
   if [[ -n $user_tags ]]; then
-    snapshot_tags="$snapshot_tags $user_tags Key=Name,Value={{ ansible_fqdn }}-{{ ec2_volume_id }}"
+    snapshot_tags="$snapshot_tags $user_tags Key=Name,Value={{ aws_hostname }}-{{ ec2_volume_id }}"
   fi
   #if $snapshot_tags is not zero length then set the tag on the snapshot using aws ec2 create-tags
   if [[ -n $snapshot_tags ]]; then

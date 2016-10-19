@@ -8,6 +8,10 @@
 - name: Install boto
   pip: name=boto
 
+- name: Use the Name tag as hostname if given
+  set_fact:
+    aws_hostname: "{{ aws_tags.Name | default(ansible_fqdn) }}"
+
 - include: tags.yml
 - include: snapshots.yml
 - include: alarms.yml
