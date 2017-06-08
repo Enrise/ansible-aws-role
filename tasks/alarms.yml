@@ -14,4 +14,4 @@
     description: "Instance status check failed"
     dimensions: { 'InstanceId': "{{ ansible_ec2_instance_id }}" }
     alarm_actions: "{{ aws_alarms_actions }}"
-  when: "{{ aws_enable_statuscheck_alarm }}"
+  when: aws_enable_statuscheck_alarm
